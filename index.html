@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechSquad</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a2a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 50px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Анимация снежинок */
+        .snowflake {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            top: -20px;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Основной контент */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
+            max-width: 800px;
+        }
+
+        /* Переливающийся заголовок */
+        .title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #4a90e2, #9b59b6, #4a90e2);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Логотип */
+        .logo {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 30px;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 0 20px rgba(74, 144, 226, 0.3);
+            border: 4px solid #4a90e2;
+            background: linear-gradient(45deg, #4a90e2, #9b59b6);
+            padding: 4px;
+        }
+
+        .logo-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #0a0a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        /* Описание */
+        .description {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #e0e0ff;
+            margin-bottom: 40px;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        /* Переливающаяся кнопка */
+        .join-button {
+            padding: 15px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            background: linear-gradient(45deg, #4a90e2, #9b59b6, #4a90e2);
+            background-size: 300% 300%;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            animation: buttonGradient 3s ease infinite;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .join-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .join-button:active {
+            transform: translateY(0);
+        }
+
+        @keyframes buttonGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Кнопка помощи */
+        .help-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #4a90e2, #9b59b6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s ease;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+        }
+
+        /* Модальное окно */
+        .modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, #0a0a2a, #1a1a4a);
+            border: 2px solid;
+            border-image: linear-gradient(45deg, #4a90e2, #9b59b6) 1;
+            border-radius: 15px;
+            padding: 25px;
+            width: 300px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .modal-content {
+            color: #e0e0ff;
+            text-align: center;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .modal-content a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .modal-content a:hover {
+            text-decoration: underline;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            color: #e0e0ff;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(3px);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2.5rem;
+            }
+            
+            .description {
+                font-size: 1rem;
+            }
+            
+            .logo {
+                width: 150px;
+                height: 150px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 2rem;
+            }
+            
+            .join-button {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+            
+            .modal {
+                width: 250px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Снежинки будут добавлены через JavaScript -->
+    
+    <button class="help-button">?</button>
+    
+    <div class="overlay" id="overlay"></div>
+    
+    <div class="modal" id="modal">
+        <button class="close-button">&times;</button>
+        <div class="modal-content">
+            По поводу вопросов писать в telegram: <a href="https://t.me/DreamCat69" target="_blank">@DreamCat69</a>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1 class="title">TechSquad - общение об тех-мире</h1>
+        <div class="logo">
+            <div class="logo-inner">
+                <img src="logo.jpg" alt="TechSquad Logo">
+            </div>
+        </div>
+        <p class="description">
+            TechSquad - это молодая группа в телеграм, в которой обсуждается мир технологий и гаджетов. 
+            Здесь тебе помогут найти телефон, подобрать комплектующие для ПК, решить проблему и многое другое.
+        </p>
+        <a href="https://t.me/techsquad0" target="_blank" class="join-button">Присоединиться</a>
+    </div>
+
+    <script>
+        // Создание снежинок с задержкой
+        function createSnowflakes() {
+            const snowflakesCount = 50;
+            
+            for (let i = 0; i < snowflakesCount; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+                
+                // Случайный размер от 2 до 6 пикселей
+                const size = Math.random() * 4 + 2;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                
+                // Случайная позиция по горизонтали
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                
+                // Случайная прозрачность
+                snowflake.style.opacity = Math.random() * 0.5 + 0.3;
+                
+                // Случайная скорость анимации (от 5 до 15 секунд)
+                const duration = Math.random() * 10 + 5;
+                snowflake.style.animationDuration = `${duration}s`;
+                
+                // Случайная задержка анимации (от 0 до 5 секунд)
+                const delay = Math.random() * 5;
+                snowflake.style.animationDelay = `${delay}s`;
+                
+                document.body.appendChild(snowflake);
+            }
+        }
+
+        // Модальное окно
+        const helpButton = document.querySelector('.help-button');
+        const modal = document.getElementById('modal');
+        const overlay = document.getElementById('overlay');
+        const closeButton = document.querySelector('.close-button');
+
+        helpButton.addEventListener('click', () => {
+            modal.classList.add('active');
+            overlay.classList.add('active');
+        });
+
+        closeButton.addEventListener('click', () => {
+            modal.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        overlay.addEventListener('click', () => {
+            modal.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+
+        // Инициализация снежинок при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(createSnowflakes, 1000); // Начинаем создавать снежинки через 1 секунду
+        });
+    </script>
+</body>
+</html>
+```
